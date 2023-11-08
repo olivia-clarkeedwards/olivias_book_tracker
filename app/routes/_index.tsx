@@ -1,4 +1,8 @@
-import { json, type ActionArgs, type V2_MetaFunction } from "@remix-run/node";
+import {
+  json,
+  type ActionFunctionArgs,
+  type MetaFunction,
+} from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useState } from "react";
 // import { Link, Form } from "@remix-run/react";
@@ -8,7 +12,7 @@ import { useEffect, useState } from "react";
 
 // const PROGRESS_STATES = ["toread", "reading", "read"];
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: "Olivia's Booktracker" },
     { name: "Keep track of what I'm reading", content: "Happy reading!" },
@@ -25,7 +29,7 @@ export default function Index() {
 
   useEffect(() => {
     if (fetcher.data) {
-      setCurrentBook(fetcher.data);
+      setCurrentBook(fetcher.data as Book);
     }
   });
   return (
@@ -86,7 +90,7 @@ export default function Index() {
   );
 }
 
-export const action = async (args: ActionArgs) => {
+export const action = async (args: ActionFunctionArgs) => {
   const { request } = args;
   const data = await request.formData();
 
@@ -100,7 +104,7 @@ export const action = async (args: ActionArgs) => {
 };
 
 const actionAddBook = async (
-  { request, context, params }: ActionArgs,
+  { request, context, params }: ActionFunctionArgs,
   data: FormData
 ) => {
   //get user id?
