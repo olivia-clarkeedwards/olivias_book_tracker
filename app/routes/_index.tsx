@@ -25,13 +25,14 @@ export default function Index() {
   // const user = useOptionalUser();
   const fetcher = useFetcher();
   const { Form } = fetcher;
-  const [currentBook, setCurrentBook] = useState<Book>({} as Book);
+  const [currentBook, setCurrentBook] = useState<Book | undefined>(undefined);
 
   useEffect(() => {
     if (fetcher.data) {
       setCurrentBook(fetcher.data as Book);
     }
   });
+
   return (
     <main className="h1 relative h-screen min-h-screen bg-red-200 sm:flex sm:items-center sm:justify-center">
       <h1>BookTracker</h1>
@@ -76,8 +77,6 @@ export default function Index() {
             />
           </>
         )}
-        <li>Book2</li>
-        <li>Book3</li>
       </ul>
 
       {/* {PROGRESS_STATES.map((state: string) => (
@@ -107,8 +106,6 @@ const actionAddBook = async (
   { request, context, params }: ActionFunctionArgs,
   data: FormData
 ) => {
-  //get user id?
-
   const bookTitle = data.get("title");
   const author = data.get("author");
   const coverURL = data.get("cover");
