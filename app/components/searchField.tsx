@@ -1,8 +1,9 @@
-import type { FC } from "react";
 import { useRef } from "react";
 import { useLoaderData } from "@remix-run/react";
-import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
+
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { FC } from "react";
 
 type Book = {
   cover_i: number;

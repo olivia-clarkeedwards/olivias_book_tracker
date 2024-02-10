@@ -3,7 +3,7 @@ import {
   type ActionFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
 // import { Link, Form } from "@remix-run/react";
 // import { SearchField } from "~/components/searchField";
@@ -33,6 +33,12 @@ export default function Index() {
     }
   });
 
+  const handleChange = (evt: any) => {
+    const filter = evt.target.value;
+
+    fetcher.submit(`/api/book/?q=${filter}`);
+  };
+
   return (
     <main className="h1 relative h-screen min-h-screen bg-red-200 sm:flex sm:items-center sm:justify-center">
       <h1>BookTracker</h1>
@@ -40,6 +46,7 @@ export default function Index() {
         <input hidden name="__action" value="add-book" />
         {/* <SearchField inputName="search book" placeholder="search book" /> */}
         <label htmlFor="title">Title</label>
+        <input onChange={handleChange} />
         <input
           name="title"
           className="w-full rounded-full px-2 py-1 text-center text-lg"

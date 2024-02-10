@@ -1,47 +1,65 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-
-import { createNote } from "~/models/note.server";
+import { createBook } from "~/models/book.server";
 import { requireUserId } from "~/session.server";
+
+import type { ActionFunctionArgs } from "@remix-run/node";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const title = formData.get("title");
-  const body = formData.get("body");
+  const author = formData.get("author");
+  const image = formData.get("image") || "";
+  const genre = formData.get("genre") || "";
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { body: null, title: "Title is required" } },
+      {
+        errors: {
+          title: "Title is required",
+          author: null,
+          image: null,
+          genre: null,
+          userId: null,
+        },
+      },
       { status: 400 }
     );
   }
 
-  if (typeof body !== "string" || body.length === 0) {
+  if (typeof author !== "string" || author.length === 0) {
     return json(
-      { errors: { body: "Body is required", title: null } },
+      {
+        errors: {
+          author: "Author is required",
+          title: null,
+          image: null,
+          genre: null,
+          userId: null,
+        },
+      },
       { status: 400 }
     );
   }
 
-  const note = await createNote({ body, title, userId });
+  const book = await createBook({ title, author, image, genre, userId });
 
-  return redirect(`/notes/${note.id}`);
+  return redirect(`/books/${book.id}`);
 };
 
-export default function NewNotePage() {
+export default function NewBookPage() {
   const actionData = useActionData<typeof action>();
   const titleRef = useRef<HTMLInputElement>(null);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const authorRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
-    } else if (actionData?.errors?.body) {
-      bodyRef.current?.focus();
+    } else if (actionData?.errors?.author) {
+      authorRef.current?.focus();
     }
   }, [actionData]);
 
@@ -77,23 +95,42 @@ export default function NewNotePage() {
 
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Body: </span>
-          <textarea
-            ref={bodyRef}
-            name="body"
-            rows={8}
-            className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
-            aria-invalid={actionData?.errors?.body ? true : undefined}
+          <span>Author: </span>
+          <input
+            ref={authorRef}
+            name="author"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            aria-invalid={actionData?.errors?.author ? true : undefined}
             aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
+              actionData?.errors?.author ? "author-error" : undefined
             }
           />
         </label>
-        {actionData?.errors?.body ? (
-          <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.body}
+        {actionData?.errors?.author ? (
+          <div className="pt-1 text-red-700" id="author-error">
+            {actionData.errors.author}
           </div>
         ) : null}
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Image URL: </span>
+          <input
+            name="image"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+          />
+        </label>
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Genre: </span>
+          <input
+            name="genre"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+          />
+        </label>
       </div>
 
       <div className="text-right">
