@@ -17,7 +17,7 @@ export function getBook({
 export function getBookListItems({ userId }: { userId: User["id"] }) {
   return prisma.book.findMany({
     where: { userId },
-    select: { id: true, title: true },
+    select: { id: true, title: true, author: true },
     orderBy: { updatedAt: "desc" },
   });
 }

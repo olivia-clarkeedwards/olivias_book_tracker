@@ -23,9 +23,12 @@ export default function BooksPage() {
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-gray-800 p-4 text-stone-100">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold text-stone-100">
           <Link to="." className="flex items-center gap-2">
-            <BookIcon className="mt-1" /> track<i>ka</i>
+            <BookIcon className="mt-1" />
+            <div>
+              track<i>ka</i>
+            </div>
           </Link>
         </h1>
         <p>{user.email}</p>
@@ -60,44 +63,19 @@ export default function BooksPage() {
           </aside>
           <div className="flex w-full flex-col gap-8 overflow-y-auto bg-gray-800 p-12">
             <DataPanel />
-            <div className="justify-left flex w-full flex-1 grid-cols-3 flex-wrap gap-8">
-              <BookDisplayCard />
-              <BookDisplayCard />
-              <BookDisplayCard />
-              <BookDisplayCard />
-            </div>
+            {data.bookListItems.length === 0 ? (
+              <p className="p-4">No books yet</p>
+            ) : (
+              <div className="justify-left flex w-full flex-1 grid-cols-3 flex-wrap gap-8">
+                {data.bookListItems.map((book) => (
+                  <li key={book.id}>
+                    <BookDisplayCard title={book.title} author={book.author} />
+                  </li>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-        {/* <div className="h-full w-80 border-r bg-gray-50">
-          <Link to="new" className="block p-4 text-xl text-blue-500">
-            + New Book
-          </Link>
-
-          <hr />
-
-          {data.bookListItems.length === 0 ? (
-            <p className="p-4">No books yet</p>
-          ) : (
-            <ol>
-              {data.bookListItems.map((book) => (
-                <li key={book.id}>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
-                    }
-                    to={book.id}
-                  >
-                    📝 {book.title}
-                  </NavLink>
-                </li>
-              ))}
-            </ol>
-          )}
-        </div>
-
-        <div className="flex-1 p-6">
-          <Outlet />
-        </div> */}
       </main>
     </div>
   );

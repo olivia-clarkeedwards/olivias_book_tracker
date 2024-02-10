@@ -1,121 +1,60 @@
-import {
-  json,
-  type ActionFunctionArgs,
-  type MetaFunction,
-} from "@remix-run/node";
-import { useFetcher, useSubmit } from "@remix-run/react";
-import { useEffect, useState } from "react";
-// import { Link, Form } from "@remix-run/react";
-// import { SearchField } from "~/components/searchField";
+import type { MetaFunction } from "@remix-run/node";
+import { Form, Link } from "@remix-run/react";
+import { BookIcon } from "lucide-react";
 
-// import { useOptionalUser } from "~/utils";
+import { useOptionalUser } from "~/utils";
 
-// const PROGRESS_STATES = ["toread", "reading", "read"];
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Olivia's Booktracker" },
-    { name: "Keep track of what I'm reading", content: "Happy reading!" },
-  ];
-};
-
-type Book = { title: string; author: string; coverURL: string };
+export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 
 export default function Index() {
-  // const user = useOptionalUser();
-  const fetcher = useFetcher();
-  const { Form } = fetcher;
-  const [currentBook, setCurrentBook] = useState<Book | undefined>(undefined);
-
-  useEffect(() => {
-    if (fetcher.data) {
-      setCurrentBook(fetcher.data as Book);
-    }
-  });
-
-  const handleChange = (evt: any) => {
-    const filter = evt.target.value;
-
-    fetcher.submit(`/api/book/?q=${filter}`);
-  };
-
+  const user = useOptionalUser();
   return (
-    <main className="h1 relative h-screen min-h-screen bg-red-200 sm:flex sm:items-center sm:justify-center">
-      <h1>BookTracker</h1>
-      <Form method="post" action=".">
-        <input hidden name="__action" value="add-book" />
-        {/* <SearchField inputName="search book" placeholder="search book" /> */}
-        <label htmlFor="title">Title</label>
-        <input onChange={handleChange} />
-        <input
-          name="title"
-          className="w-full rounded-full px-2 py-1 text-center text-lg"
-        />
-        <br />
-        <label htmlFor="author">Author</label>
-        <input
-          name="author"
-          className="w-full rounded-full px-2 py-1 text-center text-lg"
-        />
-        <br />
-        <label htmlFor="cover">Cover image URL</label>
-        <input
-          name="cover"
-          className="w-full rounded-full px-2 py-1 text-center text-lg"
-        />
-        <br />
-        <button
-          className="w-full rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-400 focus:bg-blue-300"
-          type="submit"
-        >
-          Add book to library
-        </button>
-      </Form>
-
-      <h2>My Library</h2>
-      <ul>
-        {currentBook && (
-          <>
-            <li>{`${currentBook?.title} by ${currentBook.author}`}</li>
-            <img
-              src={currentBook.coverURL}
-              alt={`${currentBook.title} cover`}
-              className="h-20"
-            />
-          </>
+    <main className="relative min-h-screen bg-slate-800 sm:flex sm:items-center sm:justify-center">
+      <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
+        {user ? (
+          <div className="flex flex-col items-center gap-16 text-center text-stone-100">
+            <div className="flex flex-col gap-4">
+              <p className="text-xs">
+                You are already logged in as {user.email}
+              </p>
+              <Link to="/books" className="text-3xl">
+                enter{" "}
+                <span className="font-bold">
+                  track<i>ka</i>
+                </span>
+              </Link>
+            </div>
+            <Link to="/logout" className="text-sm underline opacity-50">
+              Log out
+            </Link>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-16">
+            <h1 className="text-3xl font-bold text-stone-100">
+              <Link to="." className="flex items-center gap-2">
+                <BookIcon className="mt-1" />
+                <div>
+                  track<i>ka</i>
+                </div>
+              </Link>
+            </h1>
+            <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
+              <Link
+                to="/join"
+                className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
+              >
+                Sign up
+              </Link>
+              <Link
+                to="/login"
+                className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
+              >
+                Log In
+              </Link>
+            </div>
+          </div>
         )}
-      </ul>
-
-      {/* {PROGRESS_STATES.map((state: string) => (
-        <div className="card" key={state}>
-          <h2>{state.toUpperCase()}</h2>
-          <Link to={`/books/${state}`}>View all</Link>
-        </div>
-      ))} */}
+      </div>
     </main>
   );
 }
-
-export const action = async (args: ActionFunctionArgs) => {
-  const { request } = args;
-  const data = await request.formData();
-
-  const __action = data.get("__action");
-
-  switch (__action) {
-    case "add-book": {
-      return actionAddBook(args, data);
-    }
-  }
-};
-
-const actionAddBook = async (
-  { request, context, params }: ActionFunctionArgs,
-  data: FormData
-) => {
-  const bookTitle = data.get("title");
-  const author = data.get("author");
-  const coverURL = data.get("cover");
-
-  return json({ title: bookTitle, author, coverURL });
-};
