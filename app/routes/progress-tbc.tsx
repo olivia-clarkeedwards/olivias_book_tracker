@@ -15,7 +15,7 @@ const aFewSampleBooks = [
   },
 ];
 
-export default function Books() {
+export default function BookProgress() {
   const { progress } = useParams();
   return (
     <div className="h-screen bg-red-200">

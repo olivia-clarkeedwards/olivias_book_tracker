@@ -24,18 +24,24 @@ async function seed() {
     },
   });
 
-  await prisma.note.create({
+  await prisma.book.create({
     data: {
-      title: "My first note",
-      body: "Hello, world!",
+      title: "Red Rising",
+      author: "Pierce Brown",
+      image:
+        "https://ia600505.us.archive.org/view_archive.php?archive=/25/items/m_covers_0010/m_covers_0010_63.zip&file=0010630467-M.jpg",
+      genre: "Science fiction",
       userId: user.id,
     },
   });
 
-  await prisma.note.create({
+  await prisma.book.create({
     data: {
-      title: "My second note",
-      body: "Hello, world!",
+      title: "Morning Star",
+      author: "Pierce Brown",
+      image:
+        "https://ia600502.us.archive.org/view_archive.php?archive=/16/items/s_covers_0012/s_covers_0012_40.zip&file=0012401168-S.jpg",
+      genre: "Science fiction",
       userId: user.id,
     },
   });
