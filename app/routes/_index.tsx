@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { BookIcon } from "lucide-react";
 
 import { useOptionalUser } from "~/utils";
@@ -13,15 +13,18 @@ export default function Index() {
       <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
         {user ? (
           <div className="flex flex-col items-center gap-16 text-center text-stone-100">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col items-center gap-8 ">
               <p className="text-xs">
                 You are already logged in as {user.email}
               </p>
-              <Link to="/books" className="text-3xl">
-                enter{" "}
-                <span className="font-bold">
-                  track<i>ka</i>
-                </span>
+              <Link to="/books" className="flex flex-col items-center gap-4">
+                <BookIcon />
+                <h1 className="text-3xl">
+                  enter{" "}
+                  <span className="font-bold">
+                    track<i>ka</i>
+                  </span>
+                </h1>
               </Link>
             </div>
             <Link to="/logout" className="text-sm underline opacity-50">
