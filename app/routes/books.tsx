@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { BookIcon } from "lucide-react";
+import { BookIcon, BookMarkedIcon } from "lucide-react";
 import { BookDisplayCard } from "~/components/bookDisplayCard";
 import { DataPanel } from "~/components/dataPanel";
 import { Input } from "~/components/input";
@@ -25,7 +25,7 @@ export default function BooksPage() {
       <header className="flex items-center justify-between bg-gray-800 p-4 text-stone-100">
         <h1 className="text-3xl font-bold text-stone-100">
           <Link to="." className="flex items-center gap-2">
-            <BookIcon className="mt-1" />
+            <BookMarkedIcon className="mt-1" />
             <div>
               track<i>ka</i>
             </div>
